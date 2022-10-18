@@ -16,6 +16,7 @@ imágenes en blanco y negro de 28x28, posteriormente normalizadas a valores de 0
 
 ### Chapter3: Imágenes y capas de convolución
 Adaptación del punto anterior aplicando capas de convolución con filtros y pools
+    1. Ejemplo de uso para la distinción de humanos y caballos en imágenes
 
 
 

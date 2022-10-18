@@ -1,5 +1,22 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import cv2
+import numpy as np
+from tensorflow.keras.preprocessing import image
+
+
+def caballo_o_humano(model, imagen):
+    x = image.load_img(imagen, target_size=(300, 300))
+    x = np.expand_dims(x, axis=0)
+
+    image_tensor = np.vstack([x])
+    classes = model.predict(image_tensor)
+    print(classes)
+    print(classes[0])
+    if classes[0] > 0.5:
+        print(imagen + " is a human")
+    else:
+        print(imagen + " is a horse")
 
 
 # Reescalado de las imágenes a 1/255
@@ -45,6 +62,25 @@ print(model.summary())
 # Modelo
 model.compile(loss='binary_crossentropy', optimizer=tf.keras.optimizers.RMSprop(lr=0.001), metrics=['accuracy'])
 
+""" Comentado para no realizar el entrenamiento y usar el modelo almacenado 
 # Entrenamos la CNN, pero esta vez añadimos por adelantado el bloque de datos de validación
 history = model.fit(train_generator, epochs=15, validation_data=validation_generator)
 
+# Vamos a hacer un guardado del modelo para no tener que estar entrenando en cada ejecución
+model.save('mi_modelo')
+"""
+
+# Cargamos el modelo si no queremos realizar el entrenamiento
+new_model = tf.keras.models.load_model('mi_modelo')
+
+# Probamos el modelo con algunas imágenes de prueba
+caballo_o_humano(new_model, 'Imgs_test/img1.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img2.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img3.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img4.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img5.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img6.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img7.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img8.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img9.jpg')
+caballo_o_humano(new_model, 'Imgs_test/img10.jpg')

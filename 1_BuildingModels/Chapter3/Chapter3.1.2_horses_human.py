@@ -19,8 +19,21 @@ def caballo_o_humano(model, imagen):
         print(imagen + " is a horse")
 
 
-# Reescalado de las imágenes a 1/255
+"""# Solo Reescalado de las imágenes a 1/255 para normalizarlas
 train_datagen = ImageDataGenerator(rescale=1/255)
+"""
+# Variación de las imágenes para a partir del set actual generar más variaciones y tener más imágenes de entrenamiento
+train_datagen = ImageDataGenerator(
+    rescale=1./255,  # Reescalado de la imagen 1/255
+    rotation_range=40,  # Rotaciones de imagen a 40º de izquierda a derecha
+    width_shift_range=0.2,  # Desplazamiento de la imagen horizontalmente un 20%
+    height_shift_range=0.2,  # Desplazamiento de la imagen verticalmente un 20%
+    shear_range=0.2,  # Recorte de un 20%
+    zoom_range=0.2,  # Zoom de un 20%
+    horizontal_flip=True,  # Aleatoriamente girar la imagen
+    fill_mode='nearest'  # Rellenado de pixeles perdidos con los mas cercanos
+)
+
 validation_datagen = ImageDataGenerator(rescale=1/255)
 
 training_dir = 'horse-or-human/training/'
@@ -62,7 +75,8 @@ print(model.summary())
 # Modelo
 model.compile(loss='binary_crossentropy', optimizer=tf.keras.optimizers.RMSprop(lr=0.001), metrics=['accuracy'])
 
-""" Comentado para no realizar el entrenamiento y usar el modelo almacenado 
+"""
+# Comentado para no realizar el entrenamiento y usar el modelo almacenado
 # Entrenamos la CNN, pero esta vez añadimos por adelantado el bloque de datos de validación
 history = model.fit(train_generator, epochs=15, validation_data=validation_generator)
 
@@ -70,8 +84,10 @@ history = model.fit(train_generator, epochs=15, validation_data=validation_gener
 model.save('mi_modelo')
 """
 
+
 # Cargamos el modelo si no queremos realizar el entrenamiento
 new_model = tf.keras.models.load_model('mi_modelo')
+
 
 # Probamos el modelo con algunas imágenes de prueba
 caballo_o_humano(new_model, 'Imgs_test/img1.jpg')
@@ -84,3 +100,4 @@ caballo_o_humano(new_model, 'Imgs_test/img7.jpg')
 caballo_o_humano(new_model, 'Imgs_test/img8.jpg')
 caballo_o_humano(new_model, 'Imgs_test/img9.jpg')
 caballo_o_humano(new_model, 'Imgs_test/img10.jpg')
+
